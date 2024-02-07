@@ -4,6 +4,7 @@ from flask_bcrypt import Bcrypt
 from flask_login import LoginManager
 from flask_mail import Mail
 from config import Config
+from flask_cors import CORS
     
 db = SQLAlchemy()
 bcrypt = Bcrypt()
@@ -14,6 +15,7 @@ mail = Mail()
 
 def create_app(config_class=Config):
     app = Flask(__name__)
+    CORS(app)
     app.config.from_object(Config)
 
     db.init_app(app)
