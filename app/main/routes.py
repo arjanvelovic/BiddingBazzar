@@ -1,4 +1,4 @@
-from flask import render_template, request, Blueprint, redirect, url_for, current_app
+from flask import render_template, request, Blueprint
 from models import Item
 from app.main.forms import SearchForm
 

@@ -13,23 +13,22 @@ login_manager.login_view = 'users.signin'
 login_manager.login_message_category = 'info'
 mail = Mail()
 
-def create_app(config_class=Config):
-    app = Flask(__name__)
-    CORS(app)
-    app.config.from_object(Config)
 
-    db.init_app(app)
-    bcrypt.init_app(app)
-    login_manager.init_app(app)
-    mail.init_app(app)
+app = Flask(__name__)
+CORS(app)
+app.config.from_object(Config)
 
-    from app.users.routes import users
-    from app.items.routes import items
-    from app.main.routes import main
-    from app.errors.handlers import errors
-    app.register_blueprint(users)
-    app.register_blueprint(items)
-    app.register_blueprint(main)
-    app.register_blueprint(errors)
+db.init_app(app)
+bcrypt.init_app(app)
+login_manager.init_app(app)
+mail.init_app(app)
 
-    return app
+from app.users.routes import users
+from app.items.routes import items
+from app.main.routes import main
+from app.errors.handlers import errors
+app.register_blueprint(users)
+app.register_blueprint(items)
+app.register_blueprint(main)
+app.register_blueprint(errors)
+
