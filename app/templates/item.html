@@ -1,0 +1,132 @@
+{% extends "layout.html" %}
+{% block content %}
+  <article class="content-section row d-flex justify-content-center">
+    {% if item.notactive and item.hasbuyer%}
+      <div class="bg-steel w-100 text-center text-light rounded mb-2">Sold!</div>
+    {% elif item.notactive and item.hasbuyer == False %}
+      <div class="bg-steel w-100 text-center text-light rounded mb-2">Auction Ended</div>
+    {% endif %}
+    <div class= "mb-2 text-center">
+      <a class="article-title h2 text-capitalize" href="{{ url_for('items.item', item_id=item.id) }}">{{ item.title }}</a>
+    </div>
+
+    <div class="d-flex col-12 justify-content-center border-bottom pb-2">
+      <img class="article-img3" src="{{ url_for('static', filename='item_pics/' + item.image_file) }}">
+    </div>
+    <div class="col-12">
+      <div id = "item_info_block" class="container my-2">
+        <div>Description:</div>
+        <div class="mb-3">{{ item.description }}</div>
+
+        {% if item.notactive and item.hasbuyer%}
+          <div>Sold Price: ${{ item.price|round(2) }}</div>
+        {% elif item.notactive and item.hasbuyer == False %}
+        <div>Price: ${{ item.price|round(2) }}</div>
+        {% elif item.notactive == False %}
+          <div>Current Bid: ${{ item.price|round(2) }}</div>
+        {% endif %}
+
+        {% if item.notactive%}
+          <div>Ended: {{ item.enddate.strftime('%h %d, %I:%M%p') }}</div>
+        {% else %}
+          <div>Auction Ends: {{ item.enddate.strftime('%h %d, %I:%M%p') }}</div>
+        {% endif %}
+      </div>
+      
+      <div id="item_form_block" class="container my-2">
+        {% if item.author == current_user %}
+          {% if item.notactive%}
+            <a class="btn btn-secondary btn-sm" href="{{ url_for('items.update_item', item_id=item.id) }}">Relist Item</a>
+          {% else %}
+            {% if item.hasbuyer %}
+              <div>
+                <small>The listing cannot be updated or deleted once a bid has been made</small>
+              </div>
+            {% else %}
+              <div>
+                <a class="btn btn-secondary btn-sm" href="{{ url_for('items.update_item', item_id=item.id) }}">Update</a>
+                <button type="button" class="btn btn-danger btn-sm mx-1" data-toggle="modal" data-target="#deleteModal">Delete</button>
+              </div>
+            {% endif %}
+        {% endif %}
+          
+        {% elif current_user.id and item.notactive == False%}
+        <div class="border-top pt-3">
+          <form method="POST" action="">
+            {{ bidform.hidden_tag() }}
+            <fieldset class="form-group">
+              <div class="form-group">
+                  {% if bidform.bidvalue.errors %}
+                  {{ bidform.hidden_tag() }}
+                      {{ bidform.bidvalue(class="form-control form-control-lg is-invalid") }}
+                      <div class="invalid-feedback">
+                          {% for error in bidform.bidvalue.errors %}
+                              <span>{{ error }}</span>
+                          {% endfor %}
+                      </div>
+                  {% else %}
+                  <div class="d-flex">
+                    <div class="mr-3">
+                      {{ bidform.bidvalue(class="form-control form-control-lg") }}
+                    </div>
+                    {{ bidform.submit(class="btn btn-outline-info") }}
+                  </div>
+                  {% endif %}
+              </div>
+            </fieldset>
+            
+          </form>
+        </div>
+        <div>
+          <form method="POST" action="">
+            {{ watchlistform.hidden_tag() }}
+            <fieldset class="form-group">
+              <div class="form-check d-flex align-items-center">
+                {{ watchlistform.watching(class="form-check-input") }}
+                {{ watchlistform.submit(class="btn btn-outline-info") }}
+              </div>
+            </fieldset>
+          </form>
+       </div>
+
+        {% else %}
+          {% if item.notactive == False %}
+            <div>
+              <a class="btn btn-secondary btn-sm" href="{{ url_for('users.signin') }}">Sign In to Place Bid</a>
+            </div>
+          {% endif %}
+        {% endif %}
+      </div>
+
+      <div id="item_user_info" class="border-top container">
+        <small>seller: <a href="{{ url_for('users.user_items', email=item.author.email) }}">{{ item.author.email }}</a></small>
+        <small class="ml-2 text-muted">listed: {{ item.listeddate.strftime('%m-%d-%Y') }}</small>
+        {% if item.category != "None" %}
+        <small class="ml-2 text-muted">{{ item.category }}</small>
+        {% endif %}
+      </div>
+    </div>
+  </article>
+
+  <!-- Delete Modal -->
+  <div class="modal fade" id="deleteModal" tabindex="-1" role="dialog" aria-labelledby="deleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <h5 class="modal-title" id="deleteModalLabel">Delete Item?</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="d-flex m-3">
+          <button type="button" class="btn btn-secondary mr-2" data-dismiss="modal">Close</button>
+          <form action="{{ url_for('items.delete_item', item_id=item.id) }}" method="POST">
+            <input class="btn btn-danger" type="submit" value="Delete">
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+{% endblock content %}

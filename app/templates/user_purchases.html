@@ -1,0 +1,69 @@
+{% extends "layout.html" %}
+{% block content %}
+    {% if current_user == user %}
+        <h5 class="mb-3">Your Purchases</h5>
+    {% else %}
+        <h5 class="mb-3">{{ user.email }} Purchases</h5>
+    {% endif %}
+
+    <div class="row justify-content-center">
+      <div class="col-md-8">
+        {% for bid in purchases %}
+        {% if bid.item.notactive%}
+        <article class="content-section row align-items-center">
+              <div class="bg-steel w-100 text-center text-light rounded mb-2">Sold!</div>
+            <div class="col-5 d-flex justify-content-center">
+              <img class="article-img2" src="{{ url_for('static', filename='item_pics/' + bid.item.image_file) }}">
+            </div>
+            <div class="col-7">
+              <div class="mb-2">
+                <a class="article-title h2 text-capitalize" href="{{ url_for('items.item', item_id=bid.item.id) }}">{{ bid.item.title }}</a>
+                {% if bid.item.category != "None" %}
+                <small class="ml-1 \text-muted">{{ bid.item.category }}</small>
+                {% endif %}
+              </div>
+
+              {% if bid.item.notactive and bid.item.hasbuyer%}
+                <div class="">Sold Price: ${{ bid.item.price|round(2) }}</div>
+              {% elif bid.item.notactive and bid.item.hasbuyer == False %}
+              <div class="">Price: ${{ bid.item.price|round(2) }}</div>
+              {% elif bid.item.notactive == False %}
+                <div class="">Current Bid: ${{ bid.item.price|round(2) }}</div>
+              {% endif %}
+              
+              {% if bid.item.notactive%}
+                <div class="">Ended: {{ bid.item.enddate.strftime('%h %d, %I:%M%p') }}</div>
+              {% else %}
+                <div class="">Auction Ends: {{ bid.item.enddate.strftime('%h %d, %I:%M%p') }}</div>
+              {% endif %}
+              <div class="border-top grid">
+                <div class="small">seller: <a class="mr-2" href="{{ url_for('users.user_items', email=bid.item.author.email) }}">{{ bid.item.author.email }}</a></div>
+                <div class="small text-muted">listed: {{ bid.item.listeddate.strftime('%m-%d-%Y') }}</div>
+              </div>
+            </div>
+          </article>
+        {% endif %}
+        {% endfor %}
+      </div>
+
+      {% if current_user.is_authenticated %}
+      <div class="col-md-4">
+        <div class="content-section">
+          <h3>Your Links</h3>
+            <ul class="list-group">
+              <li class="list-group-item list-group-item-light"><a href="{{ url_for('users.user_bids', email=current_user.email) }}" class="text-dark your-links">Bids</a></li>
+              <li class="list-group-item list-group-item-light"><a href="{{ url_for('users.user_purchases', email=current_user.email) }}" class="text-dark your-links">Purchases</a></li>
+              <li class="list-group-item list-group-item-light"><a href="{{ url_for('users.user_watchlist', email=current_user.email) }}" class="text-dark your-links">Watchlist</a></li>
+              <p></p>
+              <li class="list-group-item list-group-item-light"><a href="{{ url_for('users.user_items', email=current_user.email) }}" class="text-dark your-links">Listings</a></li>
+              <li class="list-group-item list-group-item-light"><a href="{{ url_for('users.user_sold', email=current_user.email) }}" class="text-dark your-links">Sold Items</a></li>
+            </ul>
+        </div>
+      </div>
+      {% endif %}
+    </div>
+
+
+
+    
+{% endblock content %}

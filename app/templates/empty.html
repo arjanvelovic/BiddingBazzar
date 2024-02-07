@@ -1,0 +1,37 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    {% if current_user == user %}
+      <h5 class="mb-3 capitalize">Your {{ keyword }}</h5>
+      <article class="content-section row align-items-center">
+        <div>You currently have no {{ keyword }}</div>
+    </article>
+    {% else %}
+      <h5 class="mb-3">{{ user.email }} {{ keyword }}</h5>
+      <article class="content-section row align-items-center">
+        <div>{{ user.email }} currently has no {{ keyword }}</div>
+    </article>
+    {% endif %}
+
+  </div>
+  {% if current_user.is_authenticated %}
+  <div class="col-md-4">
+    <div class="content-section">
+      <h3>Your Links</h3>
+        <ul class="list-group">
+          <li class="list-group-item list-group-item-light"><a href="{{ url_for('users.user_bids', email=current_user.email) }}" class="text-dark your-links">Bids</a></li>
+          <li class="list-group-item list-group-item-light"><a href="{{ url_for('users.user_purchases', email=current_user.email) }}" class="text-dark your-links">Purchases</a></li>
+          <li class="list-group-item list-group-item-light"><a href="{{ url_for('users.user_watchlist', email=current_user.email) }}" class="text-dark your-links">Watchlist</a></li>
+          <p></p>
+          <li class="list-group-item list-group-item-light"><a href="{{ url_for('users.user_items', email=current_user.email) }}" class="text-dark your-links">Listings</a></li>
+          <li class="list-group-item list-group-item-light"><a href="{{ url_for('users.user_sold', email=current_user.email) }}" class="text-dark your-links">Sold Items</a></li>
+        </ul>
+    </div>
+  </div>
+  {% endif %}
+</div>
+
+    
+{% endblock content %}

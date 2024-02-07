@@ -1,0 +1,110 @@
+{% extends "layout.html" %}
+{% block content %}
+  <div class="d-flex justify-content-center mb-3">
+    <form method="POST" action="/home?page=1">
+        {{ form.hidden_tag() }}
+        <fieldset class="row">
+            <div class="col-5 align-self-center">
+                {% if form.title.errors %}
+                    {{ form.title(class="form-control form-control-sm is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.title.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.title(class="form-control form-control-sm") }}
+                {% endif %}
+            </div>
+            <div class="col-5 align-self-center">
+                {% if form.category.errors %}
+                    {{ form.category(class="form-control form-control-sm is-invalid") }}
+                    <div class="invalid-feedback">
+                        {% for error in form.category.errors %}
+                            <span>{{ error }}</span>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    {{ form.category(class="form-control form-control-sm") }}
+                {% endif %}
+            </div>
+          <div class="col-2 align-self-center m2-4">
+            {{ form.submit(class="btn btn-outline-info") }}
+          </div>
+        </fieldset>
+    </form>
+  </div>
+
+  <div class="row justify-content-center">
+    <div class="col-md-8">
+      {% for item in items %}
+        <article class="content-section row align-items-center">
+          {% if item.notactive and item.hasbuyer%}
+            <div class="bg-steel w-100 text-center text-light rounded mb-2">Sold!</div>
+          {% elif item.notactive and item.hasbuyer == False %}
+            <div class="bg-steel w-100 text-center text-light rounded mb-2">Auction Ended</div>
+          {% endif %}
+          <div class="col-5 d-flex justify-content-center">
+            <img class="article-img2" src="{{ url_for('static', filename='item_pics/' + item.image_file) }}">
+          </div>
+          <div class="col-7">
+            <div class="mb-2">
+              <a class="article-title h2 text-capitalize" href="{{ url_for('items.item', item_id=item.id) }}">{{ item.title }}</a>
+              {% if item.category != "None" %}
+              <small class="ml-1 \text-muted">{{ item.category }}</small>
+              {% endif %}
+            </div>
+
+            {% if item.notactive and item.hasbuyer%}
+              <div class="">Sold Price: ${{ item.price|round(2) }}</div>
+            {% elif item.notactive and item.hasbuyer == False %}
+            <div class="">Price: ${{ item.price|round(2) }}</div>
+            {% elif item.notactive == False %}
+              <div class="">Current Bid: ${{ item.price|round(2) }}</div>
+            {% endif %}
+            
+            {% if item.notactive%}
+              <div class="">Ended: {{ item.enddate.strftime('%h %d, %I:%M%p') }}</div>
+            {% else %}
+              <div class="">Auction Ends: {{ item.enddate.strftime('%h %d, %I:%M%p') }}</div>
+            {% endif %}
+            <div class="border-top grid">
+              <div class="small">seller: <a class="mr-2" href="{{ url_for('users.user_items', email=item.author.email) }}">{{ item.author.email }}</a></div>
+              <div class="small text-muted">listed: {{ item.listeddate.strftime('%m-%d-%Y') }}</div>
+            </div>
+          </div>
+        </article>
+      {% endfor %}
+
+      {% for page_num in items.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+        {% if page_num %}
+          {% if items.page == page_num %}
+            <a class="btn btn-info mb-4" href="{{ url_for('main.home', page=page_num) }}">{{ page_num }}</a>
+          {% else %}
+            <a class="btn btn-outline-info mb-4" href="{{ url_for('main.home', page=page_num) }}">{{ page_num }}</a>
+          {% endif %}
+        {% else %}
+          ...
+        {% endif %}
+      {% endfor %}
+    </div>
+    {% if current_user.is_authenticated %}
+    <div class="col-md-4">
+      <div class="content-section">
+        <h3>Your Links</h3>
+          <ul class="list-group">
+            <li class="list-group-item list-group-item-light"><a href="{{ url_for('users.user_bids', email=current_user.email) }}" class="text-dark your-links">Bids</a></li>
+            <li class="list-group-item list-group-item-light"><a href="{{ url_for('users.user_purchases', email=current_user.email) }}" class="text-dark your-links">Purchases</a></li>
+            <li class="list-group-item list-group-item-light"><a href="{{ url_for('users.user_watchlist', email=current_user.email) }}" class="text-dark your-links">Watchlist</a></li>
+            <p></p>
+            <li class="list-group-item list-group-item-light"><a href="{{ url_for('users.user_items', email=current_user.email) }}" class="text-dark your-links">Listings</a></li>
+            <li class="list-group-item list-group-item-light"><a href="{{ url_for('users.user_sold', email=current_user.email) }}" class="text-dark your-links">Sold Items</a></li>
+          </ul>
+      </div>
+    </div>
+    {% endif %}
+    
+
+
+</div>
+{% endblock content %}
