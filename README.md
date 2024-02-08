@@ -1,0 +1,3 @@
+Bidding Bazzar is an auction webpage powered by Flask, leveraging Python's capabilities for robust user interaction. Users can create accounts, list items, place bids, add watchlists and manage their profiles seamlessly. Behind the scenes, Flask handles authentication, session management, and database integration, ensuring a smooth user experience. Real-time bidding is facilitated through WebSocket technology, providing instant updates on auction progress. The platform prioritizes technical excellence with robust error handling, data validation, and security measures.
+
+[Live Demo](https://biddingbazzar.onrender.com/)
