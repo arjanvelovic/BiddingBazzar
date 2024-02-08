@@ -100,7 +100,7 @@ def update_item(item_id):
         item.image_file = picture_file
         item.price = form.price.data
         item.hasbuyer = False
-        item.enddate = datetime.utcnow() + timedelta(minutes=10) - timedelta(hours=5)
+        item.enddate = datetime.utcnow() + timedelta(days=7) - timedelta(hours=5)
         db.session.commit()
 
         flash('Your item has been updated!', 'success')

@@ -64,18 +64,19 @@
       </div>
     </div>
 
-    <footer class = "footer d-flex bg-dark text-light justify-content-center align-items-center" id="footer">
+    <footer class = "footer d-flex bg-dark justify-content-center align-items-center" id="footer">
       <div class="container row">
-        <div class="col-4 d-flex align-items-center"><a class="small text-light footerlink" href="https://velovicportfolio.netlify.app/">@2024 created by Arjan Velovic</a></div>
-        <div class="col-4 text-center my-1"><a href="{{ url_for('main.home') }}">
-          <img class="logo2" src = "../static/MarketLogo.png"  alt="Logo"></a></div>
-        <div class="col-4"></div>
+        <div class="col-10 col-md-4 d-flex align-items-center">
+          <a class="small text-light footerlink" href="https://velovicportfolio.netlify.app/">@2024 Created by Arjan Velovic</a>
+        </div>
+        <div class="col-2 col-md-4 text-right text-md-center my-1">
+          <a href="{{ url_for('main.home') }}"><img class="logo2" src = "../static/MarketLogo.png"  alt="Logo"></a>
+        </div>
       </div>
     </footer>
 
   </div>
     
-
     <!-- Optional JavaScript -->
     <!-- jQuery first, then Popper.js, then Bootstrap JS -->
     <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
