@@ -1,9 +1,9 @@
 import os
 import secrets
 from PIL import Image
-from flask import url_for, app
+from flask import url_for
 from flask_mail import Message
-from app import mail
+from app import mail, app
 
 
 def save_picture(form_picture):
@@ -21,8 +21,8 @@ def save_picture(form_picture):
 
 def send_reset_email(user):
     token = user.get_reset_token()
-    msg = Message('Password Reset Request',
-                  sender='noreply@demo.com',
+    msg = Message('Bidding Bazzar - Password Reset',
+                  sender='pattybaddy@aol.com',
                   recipients=[user.email])
     msg.body = f'''To reset your password, visit the following link:
 {url_for('users.reset_token', token=token, _external=True)}

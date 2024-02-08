@@ -1,9 +1,8 @@
 from datetime import datetime, timedelta
 from itsdangerous import TimedJSONWebSignatureSerializer as Serializer
-from app import db, login_manager
+from app import db, login_manager, app
 from flask_login import UserMixin
 from sqlalchemy.ext.hybrid import hybrid_property
-from flask import app
 
 @login_manager.user_loader
 def load_user(user_id):

@@ -1,7 +1,7 @@
 import os
 import secrets
 from PIL import Image
-from flask import app
+from app import app
 
 
 def save_picture(form_picture):
